@@ -1,0 +1,18 @@
+{
+  "name": "get_craft_beer",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "8.0.3",
+    "pg": "^7.8.1",
+    "react": "16.8.4",
+    "react-dom": "16.8.4",
+    "sequelize": "^4.43.0"
+  }
+}
