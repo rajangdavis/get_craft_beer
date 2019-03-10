@@ -8,7 +8,9 @@ import fetch from 'isomorphic-unfetch'
 class SearchInput extends Component {
 	state = {
     query: '',
-    results: []
+    searchResults: [],
+    selectedBeer: '',
+    disabled: false
   }
 
   getInfo = () => {
@@ -16,15 +18,19 @@ class SearchInput extends Component {
       .then(data => data.json())
       .then(json => {
         this.setState({
-          results: json
+          searchResults: json
         })
       })
+  }
+
+  setLocalBeer = (beerName) =>{
+    this.state.selectedBeer = beerName
   }
 
 
 	handleInputChange = () => {
 		if(this.search.value.length == 0 ){
-			this.state.results = []
+			this.state.searchResults = []
 		}
     this.setState({
       query: this.search.value
@@ -37,6 +43,12 @@ class SearchInput extends Component {
     })
   }
 
+  setToDisabled = () =>{
+    this.setState({
+      disabled: true
+    })
+  }
+
 	render() {
 		return (
 			<div>
@@ -44,8 +56,15 @@ class SearchInput extends Component {
 				 placeholder="Search for..."
 				 ref={input => this.search = input}
 				 onChange={this.handleInputChange}
+         disabled={this.state.disabled}
 				/>
-				<Suggestions results={this.state.results} />
+				<Suggestions 
+          searchQuery={this.state.query}
+          appendMethod={this.props.appendMethod} 
+          searchResults={this.state.searchResults} 
+          setLocalBeer={this.setLocalBeer}  
+          setToDisabled={this.setToDisabled}
+        />
 			</div>
 		)
 	}

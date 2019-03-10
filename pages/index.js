@@ -1,11 +1,8 @@
 import React from 'react'
-import SearchInput from '../components/search-input'
+import Layout from '../components/layout'
 
 export default () => (
   <div>
-    <h1>Get Craft Beer</h1>
-    <div>
-      <SearchInput />
-    </div>
+    <Layout/>
   </div>
 )

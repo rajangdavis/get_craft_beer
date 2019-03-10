@@ -1,14 +1,16 @@
 const express = require('express')
 const next = require('next')
 const beersWithReviews = require(`${__dirname}/beer-names.json`);
-const { localBeerDictionaries, beerNames, reviewInfoFor } = require("./query-proxy.js")
+const { reviewInfoFor } = require("./query-proxy.js")
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
+
 app.prepare().then(() => {
   const server = express()
+  server.use(require("body-parser").json())
 
   server.post('/beersNearMe', async (req, res, next) => {
     try{
@@ -35,9 +37,7 @@ app.prepare().then(() => {
 
   server.post('/reviewInfoFor', async (req, res, next) => {
      try{
-      let obj = JSON.parse(req.headers.body)
-      console.log(obj)
-      let reviewInfo = await reviewInfoFor(obj)
+      let reviewInfo = await reviewInfoFor(req.body)
       res.send(reviewInfo)
     }catch(err){
       console.log(err)
