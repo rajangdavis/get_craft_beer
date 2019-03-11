@@ -24,9 +24,7 @@ module.exports = {
 
 			let groupedBeersInfo = {}
 
-			results.push(...localResults);
-
-			results.map(beerReview =>{
+			localResults.map(beerReview =>{
 				if(groupedBeersInfo[beerReview.beer_id] == undefined){
 					groupedBeersInfo[beerReview.beer_id] = beerReview
 				}
@@ -35,7 +33,7 @@ module.exports = {
 				}
 			})
 			// Grab the values
-			return _cosineSimularities(Object.values(groupedBeersInfo), jsonData.selectedBeers.map(b => parseInt(b.id)))
+			return _cosineSimularities(results, localResults);
 		
 		}catch(err){
 			return err
@@ -45,7 +43,6 @@ module.exports = {
 }
 
 const _coordsQuery = (location) => {
-	console.log(location)
 	let lat = parseFloat(location.latitude)
 	let long = parseFloat(location.longitude)
 
@@ -175,10 +172,13 @@ const _cosineObject = (dictionary1, dictionary2)=>{
     return numerator/Math.sqrt(dena * denb)
 }
 
-const _cosineSimularities = (beersList, beersToExclude)=>{
-	let countDicts = _cleanVectors(beersList);
-	
-	let matrix = countDicts.slice(0, beersToExclude.length).map(dict =>{
+const _cosineSimularities = (beersList, localBeers)=>{
+
+	let results = beersList.concat(localBeers)
+
+	let countDicts = _cleanVectors(results)
+
+	let matrix = countDicts.slice(0, beersList.length).map(dict =>{
 		let row = []
 		countDicts.map(innerDict =>{
 			row.push(_cosineObject(dict, innerDict))
@@ -189,21 +189,20 @@ const _cosineSimularities = (beersList, beersToExclude)=>{
 	// https://stackoverflow.com/questions/46622486/what-is-the-javascript-equivalent-of-numpy-argsort
 	// https://en.wikipedia.org/wiki/Schwartzian_transform
 	let cosineSimularityMatches = matrix.map(beerSimilarities =>{
-		return beersList
+
+		return  results
 		  .map((item, index) => [beerSimilarities[index], item])
-		  .sort(([count1], [count2]) => count2 - count1)
+		  .sort(([count1], [count2]) => count2 - count1) 
 		  .map(([, item]) => item)
-		  .map((x, i) =>{
-		  	x.cosine_similarity_score = beerSimilarities[i];
-		  	return x;
-		  })
 	})
 
-	let filteredMatchesObj = {}
-	
+	filteredMatchesObj = {}
+
 	cosineSimularityMatches.map( (x,i) =>{
-		let filteredMatch = x.filter( y => !beersToExclude.includes(y.beer_id) )
-		filteredMatchesObj[beersToExclude[i]] = filteredMatch
+		// let filteredMatch = x
+		let filteredMatch = x.filter( y => !beersList.map(bl => bl.beer_id).includes(y.beer_id) ).slice(0, 5)
+		filteredMatchesObj[beersList[i].beer_name] = filteredMatch
 	})
-	return filteredMatchesObj;
+	return filteredMatchesObj
+
 }

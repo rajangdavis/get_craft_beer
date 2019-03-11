@@ -55,7 +55,7 @@ class SearchInput extends Component {
 				<input
 				 placeholder="Search for..."
 				 ref={input => this.search = input}
-				 onChange={this.handleInputChange}
+				 onKeyUp={this.handleInputChange}
          disabled={this.state.disabled}
 				/>
 				<Suggestions 
