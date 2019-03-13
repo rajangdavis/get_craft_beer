@@ -8,32 +8,21 @@ module.exports = {
 			let localResults = await _localBeerDictionaries(jsonData.location);
 
 			let reviewInfo = 
-			`SELECT beer_id,
+			`SELECT 
+			beers.id as beer_id,
 			beers.name as beer_name,
-			review_text_vector
-			FROM reviews, beers, breweries
-			WHERE beers.id = reviews.beer_id
-			AND beers.brewery_id = breweries.id
-			AND char_length(review_text_vector::text) > 14 
-			AND beer_id IN (:beer_ids);`
-			let results =  await sequelize.query(
+			beers.review_text_json
+			FROM beers
+			WHERE beers.id IN (:beer_ids)
+			GROUP BY beers.id, beer_name;`
+			let selectedBeers =  await sequelize.query(
 				reviewInfo,
 				{ replacements: { 
 					beer_ids: jsonData.selectedBeers.map(b => parseInt(b.id))
 				}, type: sequelize.QueryTypes.SELECT })
 
-			let groupedBeersInfo = {}
-
-			localResults.map(beerReview =>{
-				if(groupedBeersInfo[beerReview.beer_id] == undefined){
-					groupedBeersInfo[beerReview.beer_id] = beerReview
-				}
-				else{
-					groupedBeersInfo[beerReview.beer_id]["review_text_vector"] += ` ${beerReview.review_text_vector}`
-				}
-			})
-			// Grab the values
-			return _cosineSimularities(results, localResults);
+			// return _cosineSimularities(selectedBeers, localResults);
+			return {'selectedBeers': selectedBeers, 'localResults': localResults};
 		
 		}catch(err){
 			return err
@@ -42,42 +31,45 @@ module.exports = {
 
 }
 
+
+
 const _coordsQuery = (location) => {
 	let lat = parseFloat(location.latitude)
 	let long = parseFloat(location.longitude)
 
 	return `
 	SELECT ST_Distance(
-	    ST_GeomFromText('POINT(${lat} ${long})', 4326), 
+	    ST_GeomFromText('POINT(${lat} ${long})', 4326),
 	    ST_GeomFromText(ST_AsText(position), 4326)
 	) * 57.884 AS distance,
-	beers.id as beer_id, 
+	beers.id as beer_id,
+	beers.review_text_json,
 	beers.name AS beer_name,
 	beers.ba_link AS link,
 	beers.ba_availability AS beer_availability,
 	breweries.name AS brewery_name,
-	reviews.review_text_vector,
 	styles.name as style
-	FROM beers, breweries, styles, reviews
-	WHERE beers.brewery_id = breweries.id
-	AND beers.style_id = styles.id 
-	AND beers.id = reviews.beer_id 
+	FROM beers, breweries, styles
+	WHERE 
+	beers.style_id = styles.id
+	AND beers.brewery_id = breweries.id
+	AND beers.style_id = styles.id
 	AND breweries.position IS NOT NULL
-	AND char_length(reviews.review_text_vector::text) > 14
+	AND beers.review_text_json IS NOT NULL
 	AND ST_DWithin(
 	    ST_GeomFromText('POINT(${lat} ${long})', 4326),
 	    ST_GeomFromText(ST_AsText(position),4326), 10/57.884
-	) 
+	)
+	AND beers.ba_availability != 'Limited (brewed once)'
 	GROUP BY
+	beers.name,
+	beers.id,
 	breweries.name,
 	breweries.position,
-	beers.id,
-	beers.name,
 	beers.ba_availability,
 	beers.ba_link,
-	reviews.review_overall,
-	styles.name, review_text_vector
-	ORDER BY distance ASC, review_overall DESC;
+	styles.name
+	ORDER BY distance ASC;
 	`
 }
 
@@ -100,52 +92,6 @@ const _queryResults = async (query)=>{
   }
 }
 
-
-const _vectToDict = (tsv) =>{
-	let counts = {}
-		// split on a text_vector string
-		// \'glass\':42 \'goe\':118 \'good\':35,83,98,105,111,113
-		// becomes
-		// ["'glass':42", "'goe':118", "'good':35,83,98,105,111,113"]
-		tsv.review_text_vector.split(" ").map(x => { 
-			// ["'glass':42", "'goe':118", "'good':35,83,98,105,111,113"]
-			// becomes
-			//["'glass':42", "'goe':118", "'good':35,83,98,105,111,113"]
-			let v = x.replace(/'/g,"").split(':')
-			if(v.length!=2){
-				// console.log(tsv)
-				// console.log(v)
-			}
-			//["'glass':42", "'goe':118", "'good':35,83,98,105,111,113"]
-			// becomes
-			//[["glass", "42"]
-			// ["goe", "118"]
-			// ["good", "35,83,98,105,111,113"]]
-
-			// Create a key if one does not exist
-			if(counts[v[0]] == undefined){
-				counts[v[0]] = 0;
-			}
-			// increment based on the numbers
-			counts[v[0]]+= v[1].split(",").length
-		})
-	return counts;
-}
-
-// This transforms the tsVectors from
-// Postgres into objects/dictionaries with word counts
-const _cleanVectors = (vectorsToMap) =>{
-
-	// An array that will store the counts
-	let beerDictionaries = []
-	// Loop through the array of objects/dicts
-	vectorsToMap.filter(x=> x.review_text_vector != null &&  x.review_text_vector != '' ).map(tsv =>{
-		let counts = _vectToDict(tsv);
-
-		beerDictionaries.push(counts)
-	})
-	return beerDictionaries
-}
 
 const _cosineObject = (dictionary1, dictionary2)=>{
 	// Initialize the dot product
@@ -176,12 +122,10 @@ const _cosineSimularities = (beersList, localBeers)=>{
 
 	let results = beersList.concat(localBeers)
 
-	let countDicts = _cleanVectors(results)
-
-	let matrix = countDicts.slice(0, beersList.length).map(dict =>{
+	let matrix = results.slice(0, beersList.length).map(dict =>{
 		let row = []
-		countDicts.map(innerDict =>{
-			row.push(_cosineObject(dict, innerDict))
+		results.map(innerDict =>{
+			row.push(_cosineObject(dict.review_text_json, innerDict.review_text_json))
 		})
 		return row
 	})
