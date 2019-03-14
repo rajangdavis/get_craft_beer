@@ -35,10 +35,12 @@ module.exports = {
 			SELECT beers.id, 
 			beers.name || ' (' || breweries.name || ')' as name 
 			FROM beers, breweries 
-			WHERE beers.name ILIKE :name_query 
+			WHERE 
+			(beers.name ILIKE :name_query OR 
+			breweries.name ILIKE :name_query)
 			AND beers.brewery_id = breweries.id 
 			AND beers.review_text_json IS NOT NULL
-			LIMIT 4;
+			LIMIT 10;
 			`
 			return await sequelize.query(
 				namesQuery,

@@ -3,6 +3,8 @@ import SearchForm from '../components/search-form'
 
 class Layout extends Component {
 	state = {
+		loaded: false,
+		online: true,
 		beersAsBasis: [],
 		beerResults: [],
 		localPosition: {},
@@ -14,6 +16,19 @@ class Layout extends Component {
 		this.forceUpdate()
 	}
 
+	conditionalOfflineMessage = () =>{
+		if(this.state.online == false){
+			return <div>
+				<p>You are currently offline or have a very intermittent internet connections.</p>
+				<p>Please retry accessing this application when you have a better internet connection.</p>
+				<br/><br/>
+			</div>
+		}else{
+			return <SearchForm {...this.state} />
+		}
+	}
+
+
 	conditionalErrorMessage = () =>{
 		if(this.state.locationErrMsg){
 			return <div>
@@ -24,6 +39,33 @@ class Layout extends Component {
 				<br/><br/>
 			</div>
 		}
+	}
+
+
+	checkIfLoaded = () =>{
+		if(this.state.loaded == false){
+			return(
+				<p>Still Loading... please wait</p>
+			)
+		}else{
+			return(
+				this.conditionalErrorMessage(),
+				this.conditionalOfflineMessage()
+			)
+		}
+	}
+
+	checkIfOnline = () =>{
+		this.getLocation();
+		this.setToOnline();
+		let ref = this;
+		function updateOnlineStatus(event) {
+			ref.setState({
+				online: navigator.onLine,
+			})
+		}
+		window.addEventListener('online',  updateOnlineStatus);
+		window.addEventListener('offline', updateOnlineStatus);
 	}
 
 	getLocation = () =>{
@@ -45,16 +87,20 @@ class Layout extends Component {
 		})
 	}
 
+	setToOnline(){
+		this.setState({loaded: true});
+		this.forceUpdate();
+	}
+
 	componentDidMount(){
-		this.getLocation()
+		this.checkIfOnline();
 	}
 
 	render(){
 		return (
 			<div>
 				<h1>Get Craft Beer</h1>
-				{this.conditionalErrorMessage()}
-				<SearchForm {...this.state} />
+				{this.checkIfLoaded()}
 			</div>
 		)
 	}
