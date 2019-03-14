@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
+    "heroku-postbuild": "next build",
     "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
@@ -16,5 +17,8 @@
     "react-dom": "16.8.4",
     "sequelize": "^4.43.0",
     "sequelize-cli": "^5.4.0"
+  },
+  "engines": {
+    "node": "10.x"
   }
 }
