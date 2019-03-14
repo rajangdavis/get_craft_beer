@@ -23,7 +23,9 @@ class Suggestions extends Component{
 
   	if (this.state.disabled == true){
   		return(<p>{this.state.selectedBeer.name}</p>) 
-  	}else if(this.props.searchResults.length == 0 && this.props.searchQuery.length > 1){
+  	}else if(this.props.isSearching == true){
+  		return (<p><i>Searching</i></p>)
+  	}else if(this.props.searchResults.length == 0 && this.props.searchQuery.length > 1 && this.props.isSearching == false){
   		return (<p><i>No results</i></p>) 
   	}else{
   		return(

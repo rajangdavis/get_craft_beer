@@ -20,10 +20,10 @@ class SearchButton extends Component {
 		      'Content-Type': 'application/json'
 		    },
 		})
-    .then(data => data.json())
-    .then(json => {
-      console.log(json)
-    })
+	    .then(data => data.json())
+	    .then(json => {
+	      console.log(json)
+	    })
 	}
 
 	render(){

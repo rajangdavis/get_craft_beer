@@ -10,17 +10,41 @@ class SearchInput extends Component {
     query: '',
     searchResults: [],
     selectedBeer: '',
+    searching: false,
+    searchQueue: [],
     disabled: false
   }
 
-  getInfo = () => {
-    fetch(`/beerNames?name=${this.state.query}`)
-      .then(data => data.json())
-      .then(json => {
-        this.setState({
-          searchResults: json
-        })
+
+  getInfo = (ref) => {
+
+    let updatedSearchQueue = this.state.searchQueue.concat(this.state.query)
+    
+    this.setState({
+      searching: true,
+      searchQueue: updatedSearchQueue
+    })
+    fetch('beerNames',{
+      method:"POST",
+      body: JSON.stringify({query: this.state.query}),
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+    })
+    .then(data => data.json())
+    .then(json => {
+
+      let updatedSearchQueue = this.state.searchQueue.slice(1,this.state.searchQueue.length)  
+
+      ref.setState({
+        searchQueue: updatedSearchQueue,
+        searchResults: json,
+        searching: updatedSearchQueue.length == 0 ? false : true
       })
+      ref.forceUpdate()
+    })
+    
   }
 
   setLocalBeer = (beerName) =>{
@@ -37,7 +61,7 @@ class SearchInput extends Component {
     }, () => {
       if (this.state.query && this.state.query.length > 1) {
         if (this.state.query.length % 2 === 0) {
-          this.getInfo()
+          this.getInfo(this)
         }
       }
     })
@@ -59,6 +83,7 @@ class SearchInput extends Component {
          disabled={this.state.disabled}
 				/>
 				<Suggestions 
+          isSearching={this.state.searching}
           searchQuery={this.state.query}
           appendMethod={this.props.appendMethod} 
           searchResults={this.state.searchResults} 

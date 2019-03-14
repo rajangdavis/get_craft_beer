@@ -1,7 +1,6 @@
 const express = require('express')
 const next = require('next')
-const beersWithReviews = require(`${__dirname}/beer-names.json`);
-const { reviewInfoFor } = require("./query-proxy.js")
+const { reviewInfoFor,beersWithReviews } = require(`${__dirname}/utils/query-proxy.js`)
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
@@ -12,22 +11,12 @@ app.prepare().then(() => {
   const server = express()
   server.use(require("body-parser").json())
 
-  server.post('/beersNearMe', async (req, res, next) => {
-    try{
-      let parsedRequest = JSON.parse(req.headers.body)
-      let localBeers = await localBeerDictionaries(parsedRequest)
-      console.log(localBeers)
-      res.send(localBeers);
-    }catch(err){
-      console.log(err)
-      res.send(JSON.stringify({err: "There was an error with your request."}));
-    }
-  });  
-
-  server.get('/beerNames', async(req, res, next) => {
+  server.post('/beerNames', async(req, res, next) => {
      try{
-      console.log(req.query.name)
-      res.send(beersWithReviews.filter(beer => beer.name.toLowerCase().indexOf(req.query.name) > -1).slice(0,4));
+      console.log(req.body)
+      let beerNameResults = await beersWithReviews(req.body.query);
+      console.log(beerNameResults);
+      res.send(beerNameResults);
     }catch(err){
       console.log(err)
       res.send(JSON.stringify({err: "There was an error with your request."}));
