@@ -9,7 +9,9 @@ const compression = require('compression')
 const handle = app.getRequestHandler()
 
 var setCustomHeaderFunc = function(req, res, next) {
-    res.set('SpecialCustomHeader', 'super-awesome-value')
+    if(!req.secure) {
+      return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    }
     next()
 };
 
@@ -22,7 +24,7 @@ app.prepare().then(() => {
   server.post('/beerNames', async(req, res, next) => {
      try{
       console.log(req.body)
-      let beerNameResults = beersWithReviews.filter( x => x.name.toLowerCase().indexOf(req.body.query) != -1 ).slice(0, 10);
+      let beerNameResults = beersWithReviews.filter( x => x.name.toLowerCase().indexOf(req.body.query.toLowerCase()) != -1 ).slice(0, 10);
       console.log(beerNameResults);
       res.send(beerNameResults);
     }catch(err){
