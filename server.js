@@ -8,17 +8,18 @@ const app = next({ dev })
 const compression = require('compression') 
 const handle = app.getRequestHandler()
 
-var setCustomHeaderFunc = function(req, res, next) {
-    if(!req.secure) {
-      return res.redirect(['https://', req.get('Host'), req.url].join(''));
-    }
+var setHttpsRedirect = function(req, res, next) {
+  if(req.headers['x-forwarded-proto']!='https'){
+    return res.redirect(['https://', req.get('Host'), req.url].join(''));
+  }else{
     next()
+  }
 };
 
 app.prepare().then(() => {
   const server = express()
   server.use(compression())
-  server.use('*', setCustomHeaderFunc)
+  server.use('*', setHttpsRedirect)
   server.use(require("body-parser").json())
 
   server.post('/beerNames', async(req, res, next) => {
