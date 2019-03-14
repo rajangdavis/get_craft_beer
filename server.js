@@ -9,7 +9,7 @@ const compression = require('compression')
 const handle = app.getRequestHandler()
 
 var setHttpsRedirect = function(req, res, next) {
-  if(req.headers['x-forwarded-proto']!='https'){
+  if(req.headers['x-forwarded-proto']!='https' && !dev){
     return res.redirect(['https://', req.get('Host'), req.url].join(''));
   }else{
     next()

@@ -22,7 +22,7 @@ let finalConfig = {
   }
 };
 
-if(process.env.DATABASE_URL == undefined){
+if(process.env.NODE_ENV == 'development'){
   finalConfig.development = {
     username: "postgres",
     password: process.env.PG_PASS,

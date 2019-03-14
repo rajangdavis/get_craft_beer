@@ -31,7 +31,7 @@ class BeerResultsCard extends Component {
 						<li>
 							<span>
 								<strong>Alcohol by volume</strong>:
-								{beer.abv && beer.abv.length > 3 ? beer.abv : 'Unknown'}
+								{beer.abv ? `${beer.abv}%` : "Unknown" }
 							</span>
 						</li>
 						<li>
