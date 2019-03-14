@@ -5,11 +5,18 @@ const { reviewInfoFor } = require(`${__dirname}/utils/query-proxy.js`)
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
+const compression = require('compression') 
 const handle = app.getRequestHandler()
 
+var setCustomHeaderFunc = function(req, res, next) {
+    res.set('SpecialCustomHeader', 'super-awesome-value')
+    next()
+};
 
 app.prepare().then(() => {
   const server = express()
+  server.use(compression())
+  server.use('*', setCustomHeaderFunc)
   server.use(require("body-parser").json())
 
   server.post('/beerNames', async(req, res, next) => {

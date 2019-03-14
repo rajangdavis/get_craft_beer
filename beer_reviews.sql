@@ -39,3 +39,15 @@ FROM   tmp_x
 WHERE  beers.id = tmp_x.beer_id;
 
 DROP TABLE tmp_x; -- else it is dropped at end of session automatically
+
+
+-- Production deployment
+\copy (SELECT * FROM beers GROUP BY beers.id) to 'C:\Users\rajan\Desktop\beers.csv' DELIMITER ',' CSV HEADER;
+\copy (SELECT * FROM styles GROUP BY styles.id) to 'C:\Users\rajan\Desktop\styles.csv' DELIMITER ',' CSV HEADER;
+\copy (SELECT * FROM breweries GROUP BY breweries.id) to 'C:\Users\rajan\Desktop\breweries.csv' DELIMITER ',' CSV HEADER;
+
+pg -d $CRAFT_BEER_PROD -c "CREATE EXTENSION postgis; set client_encoding to 'UTF8';"
+
+cat  ~/Desktop/beers.csv && pg -d $CRAFT_BEER_PROD -c "COPY beers (id , name , brewery_id , style_id , ba_link , ba_availability , ba_description , abv , rating_counts , total_score , beer_flavor_wheel) FROM STDIN WITH (FORMAT CSV, HEADER TRUE);"
+cat  ~/Desktop/breweries.csv && pg -d $CRAFT_BEER_PROD -c "COPY breweries (id, name, phone_number, address, zipcode, city, state, country, website, position, features, ba_link) FROM STDIN WITH (FORMAT CSV, HEADER TRUE);"
+cat  ~/Desktop/styles.csv && pg -d $CRAFT_BEER_PROD -c "COPY styles ( id, name, ba_link, abv_range, ibu_range, glassware, description) FROM STDIN WITH (FORMAT CSV, HEADER TRUE);"
