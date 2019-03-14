@@ -1,6 +1,9 @@
 module.exports = {
 
 	cosineSimularities: function(selectedBeers, localResults){
+
+
+
 		let mergedList = selectedBeers.concat(localResults);
 		let matrix = mergedList.slice(0, selectedBeers.length).map((dict) =>{
 			let row = []
@@ -18,17 +21,29 @@ module.exports = {
 			  .map(([, item]) => item)
 		})
 
-		filteredMatchesObj = {}
+		let filteredMatchesArr = []
 
 		cosineSimularityMatches.map( (x,i) =>{
-			let filteredMatch = x.slice(1, 6).map(y =>{
+			
+			let filteredMatchesObj = {
+				id: selectedBeers[i].beer_id,
+				name: selectedBeers[i].beer_name,
+				matchedBeers: []
+			}
+
+			let filteredMatch = x.filter(y =>{
+				return y.distance != undefined
+			}).slice(1, 6).map(y =>{
 				delete y.review_text_json;
 				return y;
 			});
 			
-			filteredMatchesObj[selectedBeers[i].beer_name] = filteredMatch
+
+			filteredMatchesObj.matchedBeers = filteredMatch;
+			filteredMatchesArr.push(filteredMatchesObj);
 		})
-		return filteredMatchesObj
+
+		return filteredMatchesArr;
 		
 	}
 

@@ -1,6 +1,7 @@
 const express = require('express')
 const next = require('next')
-const { reviewInfoFor,beersWithReviews } = require(`${__dirname}/utils/query-proxy.js`)
+const beersWithReviews = require(`${__dirname}/static/beer-names.json`);
+const { reviewInfoFor } = require(`${__dirname}/utils/query-proxy.js`)
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
@@ -14,7 +15,7 @@ app.prepare().then(() => {
   server.post('/beerNames', async(req, res, next) => {
      try{
       console.log(req.body)
-      let beerNameResults = await beersWithReviews(req.body.query);
+      let beerNameResults = beersWithReviews.filter( x => x.name.toLowerCase().indexOf(req.body.query) != -1 ).slice(0, 10);
       console.log(beerNameResults);
       res.send(beerNameResults);
     }catch(err){

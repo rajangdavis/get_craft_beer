@@ -8,7 +8,7 @@ class Option extends Component{
 	render(){
 		return(
 			<li>
-				<a href="#" onClick={this.appendToBeersBasis}>{this.props.beer.name}</a>
+				<a href="javascript:void(0)" role="link" tabIndex="0" onClick={this.appendToBeersBasis}>{this.props.beer.name}</a>
 	    	</li>
 		)
 	}

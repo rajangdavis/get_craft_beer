@@ -4,14 +4,9 @@ import SearchButton from '../components/search-button'
 
 class SearchForm extends Component {
 
-	appendToBasisBeers = (beer) =>{
-		this.props.beersAsBasis.push(beer)
-		this.forceUpdate()
-	}
-
 	conditionalSearchInput = (lengthToCheck) =>{
 		if(this.props.beersAsBasis.length >= lengthToCheck){
-			return <SearchInput appendMethod={this.appendToBasisBeers}/>
+			return <SearchInput {...this.props}/>
 		}
 	}
 
@@ -24,9 +19,11 @@ class SearchForm extends Component {
 	render(){
 		return (
 			<div id="search-input-container">
-				<SearchInput appendMethod={this.appendToBasisBeers}/>
+				<h2>Please choose 1 - 3 beers to compare against beers in your local area</h2>
+				<SearchInput {...this.props}/>
 				{this.conditionalSearchInput(1)}
 				{this.conditionalSearchInput(2)}
+				<br/>
 				{this.conditionalSearchButton()}
 			</div>
 		)

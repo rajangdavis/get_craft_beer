@@ -11,7 +11,7 @@ class Suggestions extends Component{
 	
 	setLocalBeerAndUpdateBeersBasis = (beer) =>{
 		this.props.setLocalBeer(beer);
-		this.props.appendMethod(beer);
+		this.props.appendToBasisBeers(beer);
 		this.props.setToDisabled();
 		this.setState({
 			disabled: true,
@@ -26,7 +26,7 @@ class Suggestions extends Component{
   	}else if(this.props.isSearching == true){
   		return (<p><i>Searching for '{this.props.searchQuery}'</i></p>)
   	}else if(this.props.searchResults.length == 0 && this.props.searchQuery.length > 1 && this.props.isSearching == false){
-  		return (<p><i>No results</i></p>) 
+  		return (<p><i>No results for '{this.props.searchQuery}'</i></p>) 
   	}else{
   		return(
   			<ul>{

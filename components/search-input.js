@@ -76,7 +76,7 @@ class SearchInput extends Component {
 	render() {
 		return (
 			<div>
-				<input
+				<input className="key-up"
 				 placeholder="Search for..."
 				 ref={input => this.search = input}
 				 onKeyUp={this.handleInputChange}
@@ -85,7 +85,7 @@ class SearchInput extends Component {
 				<Suggestions 
           isSearching={this.state.searching}
           searchQuery={this.state.query}
-          appendMethod={this.props.appendMethod} 
+          appendToBasisBeers={this.props.appendToBasisBeers} 
           searchResults={this.state.searchResults} 
           setLocalBeer={this.setLocalBeer}  
           setToDisabled={this.setToDisabled}

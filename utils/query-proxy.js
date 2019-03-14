@@ -64,6 +64,7 @@ const _localBeerDictionaries = async (location) =>{
 		) * 57.884 AS distance,
 		beers.id as beer_id,
 		beers.review_text_json,
+		beers.abv,
 		beers.name AS beer_name,
 		beers.ba_link AS link,
 		beers.ba_availability AS beer_availability,
