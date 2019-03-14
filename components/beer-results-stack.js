@@ -5,7 +5,7 @@ import BeerResultsCard from '../components/beer-results-card'
 class BeerResultsStack extends Component {
 	render(){
 		let beerResults = this.props.beerResults.map(result =>{
-			return (<BeerResultsCard key={result.id} resultData={result}/>)
+			return (<BeerResultsCard key={result.id} location={this.props.location} resultData={result}/>)
 		})
 
 		return (

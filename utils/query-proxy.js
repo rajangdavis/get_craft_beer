@@ -8,6 +8,8 @@ module.exports = {
 		try{
 			let localResults = await _localBeerDictionaries(jsonData.location);
 
+			console.log(localResults)
+
 			let reviewInfo = 
 			`SELECT 
 			beers.id as beer_id,
@@ -27,30 +29,6 @@ module.exports = {
 		}catch(err){
 			return err
 		}
-	},
-
-	beersWithReviews: async (beerName) =>{
-		try{
-			let namesQuery =`
-			SELECT beers.id, 
-			beers.name || ' (' || breweries.name || ')' as name 
-			FROM beers, breweries 
-			WHERE 
-			(beers.name ILIKE :name_query OR 
-			breweries.name ILIKE :name_query)
-			AND beers.brewery_id = breweries.id 
-			AND beers.review_text_json IS NOT NULL
-			LIMIT 10;
-			`
-			return await sequelize.query(
-				namesQuery,
-				{ replacements: { 
-					name_query: `%${beerName}%`
-				}, type: sequelize.QueryTypes.SELECT });
-
-		}catch(err){
-			return err;
-		}
 	}
 
 }
@@ -69,6 +47,10 @@ const _localBeerDictionaries = async (location) =>{
 		beers.ba_link AS link,
 		beers.ba_availability AS beer_availability,
 		breweries.name AS brewery_name,
+		breweries.address AS brewery_address,
+		breweries.city AS brewery_city,
+		breweries.state AS brewery_state,
+		breweries.zipcode AS brewery_zipcode,
 		styles.name as style
 		FROM beers, breweries, styles
 		WHERE 
@@ -82,14 +64,6 @@ const _localBeerDictionaries = async (location) =>{
 		    ST_GeomFromText(ST_AsText(position),4326), 10/57.884
 		)
 		AND beers.ba_availability != 'Limited (brewed once)'
-		GROUP BY
-		beers.name,
-		beers.id,
-		breweries.name,
-		breweries.position,
-		beers.ba_availability,
-		beers.ba_link,
-		styles.name
 		ORDER BY distance ASC;
 		`
     	return await sequelize.query(coordsQuery, { replacements: { 

@@ -43,7 +43,7 @@ class Layout extends Component {
 				<br/><br/>
 			</div>
 		}else if(this.state.beerResults.length > 0){
-			return <BeerResultsStack clearForm={this.clearForm} beerResults={this.state.beerResults}/>
+			return <BeerResultsStack clearForm={this.clearForm} location={this.state.localPosition} beerResults={this.state.beerResults}/>
 		}else if(this.state.locationErrMsg){
 			return this.conditionalErrorMessage()
 		}else{
