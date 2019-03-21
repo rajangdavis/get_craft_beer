@@ -37,14 +37,21 @@ function FlavorWheel(){
         new BeerFlavor({name:"Fatty", flavors:["Vegetable oil","Mineral oil", "oil"], parent:"Oily"}),
 	]
 	this.checkFlavors = beer =>{
-		console.log(this.flavors)
+		let beerFlavorWheel = {
+			name: `${beer['beer_name']} Flavor Wheel`,
+            children: []
+		}
+		this.flavors.map(flavor =>{
+			let flavorCheck = flavor.checkFlavors(beer['review_text_json'])
+			beerFlavorWheel.children.push(flavorCheck)
+		})
+
+		return beerFlavorWheel
 	}
 }
 
-let flavorWheel = new FlavorWheel();
-flavorWheel.checkFlavors()
+module.exports = FlavorWheel
 
-  
 //     def check_flavors(self, beer):
 //         beer_flavor_wheel = {
 //             "name": f"{beer['beer_name']} Flavor Wheel",
