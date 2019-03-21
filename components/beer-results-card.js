@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import BeerFlavorWheel from '../components/beer-flavor-wheel'
+// import beerJson from '../notebooks/json/3639.json'
 import Link from 'next/link'
 
 class BeerResultsCard extends Component {
 
+
 	render(){
+		// console.log(beerJson)
 		let beerName = this.props.resultData.name;
 
 		let matchedBeers = this.props.resultData.matchedBeers.map(beer=>{
@@ -56,12 +59,16 @@ class BeerResultsCard extends Component {
 								{beer.style}
 							</span>
 						</li>
-
 						<li>
-							<BeerFlavorWheel id={beer.id} svgData={beer.beer_flavor_wheel_svg_data} />
+							<span>
+								<strong>Beer Flavors:</strong>
+								<BeerFlavorWheel id={beer.id} svgData={beer.beer_flavor_wheel_svg_data} />
+							</span>
 						</li>
-
 					</ul>
+					<br/>
+					<br/>
+					<br/>
 				</div>
 			</li>
 		})

@@ -19,7 +19,7 @@ function BeerFlavor(props){
 					if(!Object.keys(flavorObject).includes(flavor)){
 						flavorObject[flavor] = 0
 					}
-					flavorObject[flavor] += beerJson[key]
+					flavorObject[flavor] += parseInt(beerJson[key][0])
 				}
 			})
 		})

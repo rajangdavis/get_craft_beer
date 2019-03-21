@@ -10,14 +10,17 @@ class BeerFlavorWheel extends Component {
 	}
 
 	runOnLoad = (data) => {
+		console.log(data)
 
 		let autosize = svg => {
 		  console.log(svg)
 		  // document.body.appendChild(svg);
+		  let box = svg.getBBox();
 		  // document.body.removeChild(svg);
-		  // let box = svg.getBBox();
-		  // svg.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
-		  // return svg;
+		  svg.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
+		  // svg.node().setAttribute("viewBox", `-385.0906677246094 -465 850.0906372070312 930`);
+
+		  return svg;
 		}
 
 		let width = this.state.width
@@ -44,8 +47,8 @@ class BeerFlavorWheel extends Component {
 
 		let root = partition(data);
 
-		let svg = d3.select(this.svgEl)
-		  .style("width", "50%")
+		this.svg
+		  .style("width", "100%")
 		  .style("margin", "0 auto")
 		  .style("display", "block")
 		  .style("height", "auto")
@@ -53,7 +56,7 @@ class BeerFlavorWheel extends Component {
 		  .style("font", "30px sans-serif")
 		  .style("box-sizing", "border-box");
 
-		svg.append("g")
+		this.svg.append("g")
 		  .attr("fill-opacity", 0.6)
 		.selectAll("path")
 		.data(root.descendants().filter(d => d.depth))
@@ -62,7 +65,7 @@ class BeerFlavorWheel extends Component {
 		  .attr("d", arc)
 		.append("title")
 		  .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);  
-		svg.append("g")
+		this.svg.append("g")
 		  .attr("pointer-events", "none")
 		  .attr("text-anchor", "middle")
 		.selectAll("text")
@@ -77,7 +80,7 @@ class BeerFlavorWheel extends Component {
 		  .attr("id", d => d.data.name.split(", ").join(""))
 		  .text(d => d.data.name)
 
-		return autosize(svg.node());
+		return autosize(this.svg.node());
 	}
 
 	componentDidMount() {
@@ -90,11 +93,11 @@ class BeerFlavorWheel extends Component {
 
 	render(){
 
-		 return <div id={this.props.svgData.name.replace(/ /g,"_")}>
+		 return <div id={this.props.id}>
              <svg
                width={this.state.width}
                height={this.state.height}
-               ref={el => this.svgEl = el} >
+               ref={element => (this.svg = d3.select(element))} >
              </svg>
            </div>
 	}

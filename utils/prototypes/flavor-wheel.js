@@ -42,8 +42,24 @@ function FlavorWheel(){
             children: []
 		}
 		this.flavors.map(flavor =>{
-			let flavorCheck = flavor.checkFlavors(beer['review_text_json'].map(x => x.values))
-			beerFlavorWheel.children.push(flavorCheck)
+			let flavorCheck = flavor.checkFlavors(beer['review_text_json'])
+            if(flavorCheck.children.length > 0){
+                if(flavorCheck.name == flavorCheck['children'][0]['name']){
+                    if(flavorCheck.children[0].name == flavorCheck.children[0].children[0].name){
+                        flavorCheck.children[0].children[0].terms = flavorCheck.children[0].terms
+                        beerFlavorWheel.children.push(flavorCheck.children[0].children[0])
+                    }else{
+                        beerFlavorWheel.children.push(flavorCheck.children[0])
+                    }
+
+                }else if(beerFlavorWheel.children.map(child => child.name).includes(flavorCheck.name)){
+                    let matchedFlavor = beerFlavorWheel.children.filter(child => child.name == flavorCheck.name)[0];
+                    matchedFlavor.children += flavorCheck.children
+                }else{
+                    flavorCheck.children = flavorCheck.children[0]
+                    beerFlavorWheel.children.push(flavorCheck)
+                }
+            }
 		})
 
 		return beerFlavorWheel
@@ -51,28 +67,3 @@ function FlavorWheel(){
 }
 
 module.exports = FlavorWheel
-
-//     def check_flavors(self, beer):
-//         beer_flavor_wheel = {
-//             "name": f"{beer['beer_name']} Flavor Wheel",
-//             "children" : []
-//         }
-//         for flavor in self.flavors:
-//             flavor_check = flavor.check_flavors(beer['review_text_json'])
-//             if(len(flavor_check['children']) > 0):
-//                 try:
-//                     if flavor_check['name'] == flavor_check['children'][0]['name']:
-//                         if flavor_check['children'][0]['name'] == flavor_check['children'][0]['children'][0]['name']:
-//                             flavor_check['children'][0]['children'][0]['terms'] = flavor_check['children'][0]['terms']
-//                             beer_flavor_wheel["children"].append(flavor_check['children'][0]['children'][0])
-//                         else:
-//                             beer_flavor_wheel["children"].append(flavor_check['children'][0])
-//                     elif(flavor_check['name'] in [child['name'] for child in beer_flavor_wheel["children"]]):
-//                         matched_flavor = [child for child in beer_flavor_wheel["children"] if child['name'] == flavor_check['name']][0]
-//                         matched_flavor['children'] += flavor_check["children"]
-//                     else:
-//                         flavor_check['children'] = flavor_check['children'][0]
-//                         beer_flavor_wheel["children"].append(flavor_check)
-//                 except Exception as e:
-//                     pass
-//         return beer_flavor_wheel
