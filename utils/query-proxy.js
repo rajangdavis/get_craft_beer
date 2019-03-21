@@ -1,5 +1,5 @@
-const {sequelize} = require(`${__dirname}/models/index.js`)
-const {cosineSimularities} = require(`${__dirname}/utils/recommendations.js`)
+const {sequelize} = require(`${__dirname}/../models/index.js`)
+const {cosineSimularities} = require(`${__dirname}/recommendations.js`)
 
 module.exports = {
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
+import BeerFlavorWheel from '../components/beer-flavor-wheel'
 import Link from 'next/link'
 
 class BeerResultsCard extends Component {
-
 
 	render(){
 		let beerName = this.props.resultData.name;
@@ -56,6 +56,11 @@ class BeerResultsCard extends Component {
 								{beer.style}
 							</span>
 						</li>
+
+						<li>
+							<BeerFlavorWheel id={beer.id} svgData={beer.beer_flavor_wheel_svg_data} />
+						</li>
+
 					</ul>
 				</div>
 			</li>

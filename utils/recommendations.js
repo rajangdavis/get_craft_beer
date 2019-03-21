@@ -1,8 +1,8 @@
+const FlavorWheel = require(`${__dirname}/prototypes/flavor-wheel.js`);
+
 module.exports = {
 
 	cosineSimularities: function(selectedBeers, localResults){
-
-
 
 		let mergedList = selectedBeers.concat(localResults);
 		let matrix = mergedList.slice(0, selectedBeers.length).map((dict) =>{
@@ -34,6 +34,12 @@ module.exports = {
 			let filteredMatch = x.filter(y =>{
 				return y.distance != undefined
 			}).slice(1, 6).map(y =>{
+				let flavorWheel = new FlavorWheel();
+				try{
+					y.beer_flavor_wheel_svg_data = flavorWheel.checkFlavors(y);
+				}catch(err){
+					console.log(err)
+				}
 				delete y.review_text_json;
 				return y;
 			});

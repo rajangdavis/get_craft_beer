@@ -42,7 +42,7 @@ function FlavorWheel(){
             children: []
 		}
 		this.flavors.map(flavor =>{
-			let flavorCheck = flavor.checkFlavors(beer['review_text_json'])
+			let flavorCheck = flavor.checkFlavors(beer['review_text_json'].map(x => x.values))
 			beerFlavorWheel.children.push(flavorCheck)
 		})
 
