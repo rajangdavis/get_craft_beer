@@ -1,0 +1,127 @@
+{
+  "name": "Simcoe IPA Flavor Wheel",
+  "children": [
+    {
+      "name": "Bitter",
+      "value": 3,
+      "terms": [
+        "bitter"
+      ]
+    },
+    {
+      "name": "Astringent",
+      "children": {
+        "terms": [
+          "tast"
+        ],
+        "name": "Mouthfeel",
+        "children": [
+          {
+            "name": "Tart",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "terms": [
+        "powder"
+      ],
+      "name": "Mouthfeel",
+      "children": [
+        {
+          "name": "Powdery",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Carbonation",
+      "children": {
+        "terms": [
+          "flavor"
+        ],
+        "name": "Mouthfeel",
+        "children": [
+          {
+            "name": "Flat",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "Body",
+      "children": {
+        "terms": [
+          "think"
+        ],
+        "name": "Fullness",
+        "children": [
+          {
+            "name": "Thick",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "Fruity",
+      "children": {
+        "terms": [
+          "appreci"
+        ],
+        "name": "AFFF",
+        "children": [
+          {
+            "name": "Apple",
+            "value": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "Resinous",
+      "children": {
+        "terms": [
+          "pine",
+          "piney"
+        ],
+        "name": "Vegetal",
+        "children": [
+          {
+            "name": "Piney",
+            "value": 3
+          }
+        ]
+      }
+    },
+    {
+      "terms": [
+        "malt"
+      ],
+      "name": "Cereal",
+      "children": [
+        {
+          "name": "Malty",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "Oily",
+      "children": {
+        "terms": [
+          "oili"
+        ],
+        "name": "Fatty",
+        "children": [
+          {
+            "name": "oil",
+            "value": 1
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+module.exports = ["better", "honest", "straight", "worthi", "worth","worthless", "glass","think"]

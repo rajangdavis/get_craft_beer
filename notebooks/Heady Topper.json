@@ -1,1 +1,0 @@
-{"name": "Heady Topper Flavor Wheel", "children": [{"name": "Bitter", "value": 2, "terms": ["bitter", "bittersweet"]}, {"terms": ["honey"], "name": "Sweet", "children": [{"name": "Honey", "value": 1}]}, {"terms": ["malt"], "name": "Cereal", "children": [{"name": "Malty", "value": 2}]}]}

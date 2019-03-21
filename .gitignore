@@ -2,3 +2,5 @@ node_modules
 .next
 package-lock.json
 *.csv
+notebooks/json/*.json
+ipynb_checkpoints/
