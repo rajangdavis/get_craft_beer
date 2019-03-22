@@ -5,6 +5,9 @@ html {
   font-family: 'Inconsolata', monospace;
 }
 
+.header-links:not(:last-of-type)::after {
+    content: " | ";
+}
 
 .similar-beers, 
 .similar-beers > div, 

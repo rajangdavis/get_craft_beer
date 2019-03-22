@@ -9,7 +9,7 @@ function FlavorWheel(){
         new BeerFlavor({name:"Stale", flavors:["Leathery","Papery","Catty"]}),
         new BeerFlavor({name:"Sulfery", flavors:["Striking match","Match","Meaty"], parent:"Sulfitic"}),
         new BeerFlavor({name:"Sulfery", flavors:["Hydrogen sulfide","Sulfide","Mercaptan","Garlic","Lightstruck","Autolysed","Burnt Rubber","Rubber","Shrimp-like","Shrimp"], parent:"Sulfidic"}),
-        new BeerFlavor({name:"Sulfery", flavors:["Yeasty"]}),
+        new BeerFlavor({name:"Sulfery", flavors:["Yeast"]}),
         new BeerFlavor({name:"Sulfery", flavors:["Onion","Tomato","Sweetcorn","Corn","Parnsip","Celery","Dimethyl Sulfide","Cabbage","Cooked"], parent:"Cooked Vegetables"}),
         new BeerFlavor({name:"Mouthfeel", flavors:["Metallic","Mouthcoating","Alkaline"]}),
         new BeerFlavor({name:"Mouthfeel", flavors:["Puckering", "Tart", "Drying"], parent:"Astringent"}),

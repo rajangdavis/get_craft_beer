@@ -1,10 +1,10 @@
 import React from 'react'
-import BeerRecommendation from '../components/beer-recommendation'
+import BeerSearch from '../components/beer-search'
 import Layout from '../layouts/main'
 
 
 export default () => (
   <Layout>
-    <BeerRecommendation/>
+    <BeerSearch/>
   </Layout>
 )

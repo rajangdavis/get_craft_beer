@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import BeerFlavorWheel from '../components/beer-flavor-wheel'
-// import beerJson from '../notebooks/json/3639.json'
 import Link from 'next/link'
 
 class BeerResultsCard extends Component {

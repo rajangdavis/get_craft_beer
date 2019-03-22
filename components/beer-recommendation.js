@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import Head from 'next/head'
 import SearchForm from '../components/search-form'
 import BeerResultsStack from '../components/beer-results-stack'
 
-class Layout extends Component {
+class BeerRecommendation extends Component {
 	state = {
 		loaded: false,
 		online: true,
@@ -132,19 +131,11 @@ class Layout extends Component {
 
 	render(){
 		return (
-			<div>
-				<Head>
-	        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-	        <title>Get Craft Beer</title>
-	        <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet"/>	
-					<link rel="stylesheet" type="text/css" href="/static/style.css"/>
-	      </Head>
-	      <div className="similar-beers">
-					<h1>Get Craft Beer</h1>
-					{this.checkIfLoaded()}
-				</div>
+		    <div className="similar-beers">
+				<h1>Get Craft Beer</h1>
+				{this.checkIfLoaded()}
 			</div>
 		)
 	}
 }
-export default Layout
+export default BeerRecommendation
